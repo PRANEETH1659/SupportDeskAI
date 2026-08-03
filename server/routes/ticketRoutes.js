@@ -11,10 +11,15 @@ const {
 
 const { protect, authorize } = require("../middleware/authMiddleware");
 
+const upload = require("../middleware/uploadMiddleware");
+
 // All routes require user to be logged in
 router.use(protect);
 
-router.route("/").post(createTicket).get(getTickets);
+router
+  .route("/")
+  .post(upload.array("attachments", 3), createTicket)
+  .get(getTickets);
 
 router
   .route("/:id")

@@ -6,8 +6,14 @@ const createTicket = async (req, res) => {
 
     if (!title || !description) {
       return res
-        .send(400)
+        .status(400)
         .json({ message: "Title and Description are Missing ..." });
+    }
+
+    let attachments = [];
+
+    if (req.files && req.files.length > 0) {
+      attachments = req.files.map((file) => `/uploads/${file.filename}`);
     }
 
     const ticket = await Ticket.create({
@@ -16,9 +22,24 @@ const createTicket = async (req, res) => {
       category: category || "General",
       priority: priority || "MEDIUM",
       customer: req.user.id,
+      attachments,
     });
 
-    res.status(200).json({ message: "Query Sucessfully Raised..." }, ticket);
+    const populatedTicket = await Ticket.findById(ticket._id).populate(
+      "customer",
+      "name email",
+    );
+
+    const io = req.app.get("io");
+
+    if (io) {
+      io.emit("ticket_created", populatedTicket);
+    }
+
+    res.status(201).json({
+      message: "Query Successfully Raised...",
+      ticket: populatedTicket,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -47,6 +68,7 @@ const getTickets = async (req, res) => {
     }
 
     if (req.query.serach) {
+      const searchTerm = req.query.serach || req.query.serach;
       query.$or = [
         { title: { $regex: req.query.serach, $options: "i" } },
         { description: { $regex: req.query.serach, $options: "i" } },
@@ -94,7 +116,7 @@ const getTicketById = async (req, res) => {
 
     res.json(ticket);
   } catch (error) {
-    res.send(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -115,8 +137,17 @@ const updateTicketStatus = async (req, res) => {
     if (assignedAgent) ticket.assignedAgent = assignedAgent;
 
     const updatedTicket = await ticket.save();
-    res.json(updatedTicket);
-  } catch (erorr) {
+    const populatedTicket = await Ticket.findById(updatedTicket._id)
+      .populate("customer", "name email")
+      .populate("assignedAgent", "name email");
+    const io = req.app.get("io");
+    if (io) {
+      io.emit("ticket_updated", populatedTicket);
+      io.to(`ticket:${ticket._id}`).emit("ticket_updated", populatedTicket);
+    }
+
+    res.json(populatedTicket);
+  } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
@@ -140,14 +171,26 @@ const addComment = async (req, res) => {
     const comment = {
       user: req.user._id,
       senderName: req.user.name,
-      senderRole: (req.user.role || "customer").trim(),
+      senderRole: req.user.role === "agent" ? "Agent" : "Customer",
       message,
     };
 
     ticket.comments.push(comment);
     await ticket.save();
 
-    res.status(201).json(ticket);
+    const updatedTicket = await Ticket.findById(ticket._id)
+      .populate("customer", "name email")
+      .populate("assignedAgent", "name email");
+
+    const io = req.app.get("io");
+    if (io) {
+      io.to(`ticket:${ticket._id}`).emit("comment_added", {
+        ticketId: ticket._id,
+        comments: updatedTicket.comments,
+      });
+    }
+
+    res.status(201).json(updatedTicket);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
