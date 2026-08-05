@@ -14,6 +14,8 @@ const authRoutes = require("./routes/authRoutes");
 
 const ticketRoutes = require("./routes/ticketRoutes");
 
+const aiRoutes = require("./routes/aiRoutes");
+
 dotenv.config();
 
 connectDB();
@@ -57,6 +59,8 @@ io.on("connection", (socket) => {
 app.use("/api/auth", authRoutes);
 
 app.use("/api/tickets", ticketRoutes);
+
+app.use("/api/ai", aiRoutes);
 
 app.get("/", (req, res) => {
   res.send("SupportDesk Ai Server is running smoothly!");

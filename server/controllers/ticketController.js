@@ -21,7 +21,7 @@ const createTicket = async (req, res) => {
       description,
       category: category || "General",
       priority: priority || "MEDIUM",
-      customer: req.user.id,
+      customer: req.user._id,
       attachments,
     });
 

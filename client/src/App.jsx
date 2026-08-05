@@ -5,10 +5,11 @@ import {
   Navigate,
 } from "react-router-dom";
 
+import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import CreateTicket from "./pages/CreateTicket";
-import TicketDetail from "./pages/TicketDetail";
+import TicketDetails from "./pages/TicketDetails";
 
 function App() {
   return (
@@ -28,11 +29,12 @@ function App() {
 
         <main style={{ padding: "2rem" }}>
           <Routes>
+            <Route path="/register" element={<Register />} />
             <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="login" element={<Login />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/create-ticket" element={<CreateTicket />} />
-            <Route path="/ticket/:id" element={<TicketDetail />} />
+            <Route path="/ticket/:id" element={<TicketDetails />} />
           </Routes>
         </main>
       </div>
