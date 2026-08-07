@@ -36,59 +36,50 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4 text-blue-600">Login</h2>
+    <div className="auth-shell card">
+      <h2>Login</h2>
 
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {error && <p className="form-error">{error}</p>}
 
       <form onSubmit={handleLogin}>
-        <div className="mb-4">
-          <label className="block text-gray-700">Email</label>
+        <div className="form-group">
+          <label>Email</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded"
+            className="form-control"
+            required
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700">Password</label>
-          <div style={{ display: "flex" }}>
+        <div className="form-group">
+          <label>Password</label>
+          <div className="input-group">
             <input
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-l"
-              style={{ flex: 1 }}
+              className="form-control"
+              required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              style={{
-                padding: "0 10px",
-                background: "#eee",
-                border: "1px solid #ccc",
-                borderLeft: "none",
-                cursor: "pointer",
-                borderRadius: "0 4px 4px 0",
-              }}
+              className="input-group-btn"
             >
               {showPassword ? "Hide" : "Show"}
             </button>
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white px-4 py-2 rounded"
-        >
+        <button type="submit" className="btn btn-info btn-block">
           Login
         </button>
       </form>
 
-      <p style={{ margin: "15px", textAlign: "center" }}>
-        Don't have an account <Link to="/register">Sign up Here ..</Link>
+      <p style={{ margin: "15px 0 0", textAlign: "center" }}>
+        Don't have an account? <Link to="/register">Sign up here</Link>
       </p>
     </div>
   );

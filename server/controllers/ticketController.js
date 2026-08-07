@@ -67,11 +67,10 @@ const getTickets = async (req, res) => {
       query.priority = req.query.priority;
     }
 
-    if (req.query.serach) {
-      const searchTerm = req.query.serach || req.query.serach;
+    if (req.query.search) {
       query.$or = [
-        { title: { $regex: req.query.serach, $options: "i" } },
-        { description: { $regex: req.query.serach, $options: "i" } },
+        { title: { $regex: req.query.search, $options: "i" } },
+        { description: { $regex: req.query.search, $options: "i" } },
       ];
     }
 
@@ -165,7 +164,7 @@ const addComment = async (req, res) => {
     const ticket = await Ticket.findById(req.params.id);
 
     if (!ticket) {
-      return res.status(404).json({ error: "User Not Found " });
+      return res.status(404).json({ error: "Ticket Not Found " });
     }
 
     const comment = {

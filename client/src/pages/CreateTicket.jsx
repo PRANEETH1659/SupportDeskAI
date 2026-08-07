@@ -51,29 +51,27 @@ const CreateTicket = () => {
   };
 
   return (
-    <div style={{ maxWidth: "600px", margin: "0 auto", padding: "20px" }}>
+    <div className="auth-shell card" style={{ maxWidth: "600px" }}>
       <h2>Raise a New Ticket</h2>
 
-      <form onSubmit={handleSubmit} style={{ display: "grid", gap: "15px" }}>
-        <div>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
           <label>Title</label>
-          <br />
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            style={{ width: "100%", padding: "8px" }}
+            className="form-control"
           />
         </div>
 
-        <div>
+        <div className="form-group">
           <label>Category</label>
-          <br />
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            style={{ width: "100%", padding: "8px" }}
+            className="form-control"
           >
             <option value="Technical">Technical</option>
             <option value="Billing">Billing</option>
@@ -81,13 +79,12 @@ const CreateTicket = () => {
             <option value="General">General</option>
           </select>
         </div>
-        <div>
+        <div className="form-group">
           <label>Priority</label>
-          <br />
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
-            style={{ width: "100%", padding: "8px" }}
+            className="form-control"
           >
             <option value="LOW">Low</option>
             <option value="MEDIUM">Medium</option>
@@ -96,20 +93,18 @@ const CreateTicket = () => {
           </select>
         </div>
 
-        <div>
+        <div className="form-group">
           <label>Description</label>
-          <br />
           <textarea
             rows="5"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
-            style={{ width: "100%", padding: "8px" }}
+            className="form-control"
           ></textarea>
         </div>
-        <div>
+        <div className="form-group">
           <label>Attachments (Screenshots - Max 3)</label>
-          <br />
           {/* File input handling */}
           <input
             type="file"
@@ -122,13 +117,7 @@ const CreateTicket = () => {
         <button
           type="submit"
           disabled={loading}
-          style={{
-            padding: "10px",
-            background: "#4CAF50",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-          }}
+          className="btn btn-success btn-block"
         >
           {loading ? "Submitting..." : "Submit Ticket"}
         </button>

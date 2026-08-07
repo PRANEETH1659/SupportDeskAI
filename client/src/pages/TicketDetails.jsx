@@ -81,20 +81,20 @@ const TicketDetails = () => {
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
-      <Link to="/dashboard" style={{ display: "inline-block", marginBottom: "15px", padding: "8px 16px", background: "#333", color: "white", textDecoration: "none", borderRadius: "4px" }}>
+    <div className="ticket-detail-shell">
+      <Link to="/dashboard" className="btn btn-ghost" style={{ marginBottom: "15px" }}>
         &larr; Back to Dashboard
       </Link>
       {/* 1. Ticket Header Data */}
-      <div style={{ borderBottom: "1px solid #ccc", paddingBottom: "15px" }}>
+      <div className="card" style={{ padding: "20px" }}>
         <h2>{ticket.title}</h2>
         <p>
-          <strong>Status:</strong> {ticket.status} | <strong>Priority:</strong>{" "}
-          {ticket.priority}
+          <strong>Status:</strong> <span className="badge">{ticket.status}</span>{" "}
+          | <strong>Priority:</strong> {ticket.priority}
         </p>
         <p
           style={{
-            background: "#f5f5f5",
+            background: "var(--surface-muted)",
             padding: "15px",
             borderRadius: "5px",
           }}
@@ -106,7 +106,7 @@ const TicketDetails = () => {
         {ticket.attachments && ticket.attachments.length > 0 && (
           <div style={{ marginTop: "15px" }}>
             <h4>Attachments:</h4>
-            <div style={{ display: "flex", gap: "10px" }}>
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
               {ticket.attachments.map((imgUrl, idx) => (
                 <a
                   key={idx}
@@ -117,12 +117,7 @@ const TicketDetails = () => {
                   <img
                     src={`${API_URL}${imgUrl}`}
                     alt="Attachment"
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      objectFit: "cover",
-                      border: "1px solid #ccc",
-                    }}
+                    className="attachment-thumb"
                   />
                 </a>
               ))}
@@ -135,7 +130,7 @@ const TicketDetails = () => {
             style={{
               marginTop: "15px",
               padding: "10px",
-              background: "#e3f2fd",
+              background: "var(--surface-muted)",
               borderRadius: "5px",
             }}
           >
@@ -143,6 +138,8 @@ const TicketDetails = () => {
             <select
               value={ticket.status}
               onChange={(e) => handleStatusChange(e.target.value)}
+              className="form-control"
+              style={{ display: "inline-block", width: "auto" }}
             >
               <option value="OPEN">Open</option>
               <option value="IN_PROGRESS">In Progress</option>
@@ -155,30 +152,14 @@ const TicketDetails = () => {
       {/* 4. Socket.io Live Chat System */}
       <div style={{ marginTop: "20px" }}>
         <h3>Discussion Thread</h3>
-        <div
-          style={{
-            maxHeight: "400px",
-            overflowY: "auto",
-            marginBottom: "20px",
-            padding: "10px",
-            border: "1px solid #eee",
-          }}
-        >
+        <div className="discussion-thread card">
           {ticket.comments.length === 0 ? (
             <p>No comments yet.</p>
           ) : (
             ticket.comments.map((c, i) => (
               <div
                 key={i}
-                style={{
-                  background: c.user === user?._id ? "#e8f5e9" : "#f1f1f1",
-                  padding: "10px",
-                  borderRadius: "8px",
-                  marginBottom: "10px",
-                  marginLeft: c.user === user?._id ? "auto" : "0", // Align right if it's my message
-                  marginRight: c.user === user?._id ? "0" : "auto", // Align left if it's their message
-                  width: "80%",
-                }}
+                className={`comment-bubble ${c.user === user?._id ? "mine" : "theirs"}`}
               >
                 <strong>
                   {c.senderName} ({c.senderRole})
@@ -197,23 +178,9 @@ const TicketDetails = () => {
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
             placeholder="Type a message..."
-            style={{
-              flex: 1,
-              padding: "10px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-            }}
+            className="form-control"
           />
-          <button
-            type="submit"
-            style={{
-              padding: "10px 20px",
-              background: "#2196F3",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-            }}
-          >
+          <button type="submit" className="btn btn-info">
             Send
           </button>
         </form>

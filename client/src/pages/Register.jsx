@@ -17,7 +17,7 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setError("0");
+    setError("");
 
     try {
       const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -42,98 +42,64 @@ const Register = () => {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "400px",
-        margin: "50px auto",
-        padding: "20px",
-        border: "1px solid #ccc",
-        borderRadius: "8px",
-      }}
-    >
+    <div className="auth-shell card">
       <h2>Register for SupportDesk</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="form-error">{error}</p>}
 
       <form onSubmit={handleRegister}>
-        <div style={{ marginBottom: "15px" }}>
+        <div className="form-group">
           <label>Name</label>
-          <br />
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            style={{ width: "100%", padding: "8px" }}
+            className="form-control"
           />
         </div>
-        <div style={{ marginBottom: "15px" }}>
+        <div className="form-group">
           <label>Email</label>
-          <br />
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={{ width: "100%", padding: "8px" }}
+            className="form-control"
           />
         </div>
 
-        <div style={{ marginBottom: "15px" }}>
+        <div className="form-group">
           <label>Password</label>
-          <br />
-          <div style={{ display: "flex" }}>
+          <div className="input-group">
             <input
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              style={{
-                width: "100%",
-                padding: "8px",
-                borderRight: "none",
-                borderRadius: "4px 0 0 4px",
-                border: "1px solid #ccc",
-              }}
+              className="form-control"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              style={{
-                padding: "0 10px",
-                background: "#eee",
-                border: "1px solid #ccc",
-                borderLeft: "none",
-                cursor: "pointer",
-                borderRadius: "0 4px 4px 0",
-              }}
+              className="input-group-btn"
             >
               {showPassword ? "Hide" : "Show"}
             </button>
           </div>
         </div>
-        <div style={{ marginBottom: "15px" }}>
+        <div className="form-group">
           <label>Role</label>
-          <br />
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            style={{ width: "100%", padding: "8px" }}
+            className="form-control"
           >
             <option value="customer">Customer</option>
             <option value="agent">Support Agent</option>
           </select>
         </div>
 
-        <button
-          type="submit"
-          style={{
-            width: "100%",
-            padding: "10px",
-            background: "#4CAF50",
-            color: "white",
-            border: "none",
-          }}
-        >
+        <button type="submit" className="btn btn-success btn-block">
           Register
         </button>
       </form>

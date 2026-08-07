@@ -41,98 +41,45 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}
-      >
+      <div className="dashboard-header">
         <h2>Dashboard ({user?.role})</h2>
         <div>
           {/* Only customers should see the Raise Ticket button */}
           {user?.role === "customer" && (
             <Link
               to="/create-ticket"
-              style={{
-                marginRight: "15px",
-                padding: "8px 16px",
-                background: "#4CAF50",
-                color: "white",
-                textDecoration: "none",
-                borderRadius: "4px",
-              }}
+              className="btn btn-success"
+              style={{ marginRight: "10px" }}
             >
               + Raise Ticket
             </Link>
           )}
-          <button
-            onClick={handleLogout}
-            style={{
-              padding: "8px 16px",
-              background: "#f44336",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
-          >
+          <button onClick={handleLogout} className="btn btn-danger">
             Logout
           </button>
         </div>
       </div>
-      <div style={{ display: "grid", gap: "15px" }}>
+      <div className="ticket-list">
         {tickets.length === 0 ? (
           <p>No tickets found.</p>
         ) : (
           tickets.map((ticket) => (
-            <div
-              key={ticket._id}
-              style={{
-                padding: "15px",
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
+            <div key={ticket._id} className="card ticket-row">
               <div>
-                <h3 style={{ margin: "0 0 10px 0" }}>
-                  <Link
-                    to={`/ticket/${ticket._id}`}
-                    style={{ textDecoration: "none", color: "#333" }}
-                  >
-                    {ticket.title}
-                  </Link>
+                <h3>
+                  <Link to={`/ticket/${ticket._id}`}>{ticket.title}</Link>
                 </h3>
-                <p style={{ margin: "0", fontSize: "14px", color: "#666" }}>
+                <p className="ticket-meta">
                   Priority: <strong>{ticket.priority}</strong> | Status:{" "}
-                  <strong>{ticket.status}</strong>
+                  <span className="badge">{ticket.status}</span>
                 </p>
                 {user?.role === "agent" && (
-                  <p
-                    style={{
-                      margin: "5px 0 0 0",
-                      fontSize: "13px",
-                      color: "#888",
-                    }}
-                  >
+                  <p className="ticket-meta">
                     Customer: {ticket.customer?.name}
                   </p>
                 )}
               </div>
-              <Link
-                to={`/ticket/${ticket._id}`}
-                style={{
-                  padding: "8px 16px",
-                  background: "#2196F3",
-                  color: "white",
-                  textDecoration: "none",
-                  borderRadius: "4px",
-                }}
-              >
+              <Link to={`/ticket/${ticket._id}`} className="btn btn-info">
                 View
               </Link>
             </div>

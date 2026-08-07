@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,24 +11,24 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import CreateTicket from "./pages/CreateTicket";
 import TicketDetails from "./pages/TicketDetails";
+import AiChatWidget from "./components/AiChatWidget";
+import { AuthContext } from "./context/AuthContext";
+import "./App.css";
 
 function App() {
+  const { user } = useContext(AuthContext);
+
   return (
     <Router>
       <div className="app-container">
-        <nav
-          style={{
-            padding: "1rem",
-            background: "#333",
-            color: "white",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
+        <nav className="navbar">
           <h2>SupportDesk AI</h2>
         </nav>
 
-        <main style={{ padding: "2rem" }}>
+        {/* AI assistant is a customer-facing feature only */}
+        {user?.role === "customer" && <AiChatWidget />}
+
+        <main className="page-content">
           <Routes>
             <Route path="/register" element={<Register />} />
             <Route path="/" element={<Navigate to="/login" />} />

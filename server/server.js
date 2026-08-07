@@ -8,6 +8,8 @@ const http = require("http");
 
 const { Server } = require("socket.io");
 
+const multer = require("multer");
+
 const connectDB = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
@@ -64,6 +66,23 @@ app.use("/api/ai", aiRoutes);
 
 app.get("/", (req, res) => {
   res.send("SupportDesk Ai Server is running smoothly!");
+});
+
+// Turns Multer errors (file too large, wrong file type) into clean JSON
+// instead of the default Express HTML 500 page.
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({ message: "File too large. Max size is 5MB." });
+    }
+    return res.status(400).json({ message: err.message });
+  }
+
+  if (err) {
+    return res.status(400).json({ message: err.message });
+  }
+
+  next();
 });
 
 const PORT = process.env.PORT || 5000;
