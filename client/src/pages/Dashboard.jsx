@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Plus, LogOut, Eye, Loader2, Inbox, User } from "lucide-react";
 
 const Dashboard = () => {
   const [tickets, setTickets] = useState([]);
@@ -37,31 +38,35 @@ const Dashboard = () => {
     navigate("/login");
   };
 
-  if (loading) return <p style={{ padding: "20px" }}> Loading TIckets....</p>;
+  if (loading)
+    return (
+      <p style={{ padding: "20px", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <Loader2 size={18} className="spin" /> Loading tickets...
+      </p>
+    );
 
   return (
     <div>
       <div className="dashboard-header">
         <h2>Dashboard ({user?.role})</h2>
-        <div>
+        <div style={{ display: "flex", gap: "10px" }}>
           {/* Only customers should see the Raise Ticket button */}
           {user?.role === "customer" && (
-            <Link
-              to="/create-ticket"
-              className="btn btn-success"
-              style={{ marginRight: "10px" }}
-            >
-              + Raise Ticket
+            <Link to="/create-ticket" className="btn btn-success">
+              <Plus size={16} /> Raise Ticket
             </Link>
           )}
           <button onClick={handleLogout} className="btn btn-danger">
-            Logout
+            <LogOut size={16} /> Logout
           </button>
         </div>
       </div>
       <div className="ticket-list">
         {tickets.length === 0 ? (
-          <p>No tickets found.</p>
+          <div className="card empty-state">
+            <Inbox size={32} style={{ marginBottom: "0.5rem", opacity: 0.5 }} />
+            <p>No tickets found.</p>
+          </div>
         ) : (
           tickets.map((ticket) => (
             <div key={ticket._id} className="card ticket-row">
@@ -70,17 +75,21 @@ const Dashboard = () => {
                   <Link to={`/ticket/${ticket._id}`}>{ticket.title}</Link>
                 </h3>
                 <p className="ticket-meta">
-                  Priority: <strong>{ticket.priority}</strong> | Status:{" "}
-                  <span className="badge">{ticket.status}</span>
+                  <span className={`badge priority-${ticket.priority.toLowerCase()}`}>
+                    <span className="badge-dot" /> {ticket.priority}
+                  </span>
+                  <span className={`badge status-${ticket.status.toLowerCase()}`}>
+                    <span className="badge-dot" /> {ticket.status.replace("_", " ")}
+                  </span>
                 </p>
                 {user?.role === "agent" && (
                   <p className="ticket-meta">
-                    Customer: {ticket.customer?.name}
+                    <User size={13} /> {ticket.customer?.name}
                   </p>
                 )}
               </div>
               <Link to={`/ticket/${ticket._id}`} className="btn btn-info">
-                View
+                <Eye size={16} /> View
               </Link>
             </div>
           ))

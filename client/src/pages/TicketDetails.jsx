@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { socket } from "../socket";
 import axios from "axios";
+import { ArrowLeft, Send, Loader2, MessageSquare, Paperclip } from "lucide-react";
 
 const TicketDetails = () => {
   const [ticket, setTicket] = useState(null);
@@ -75,22 +76,31 @@ const TicketDetails = () => {
     }
   };
 
-  if (loading) return <p style={{ padding: "20px" }}>Loading Ticket...</p>;
-  if (!ticket) return <p style={{ padding: "20px" }}>Ticket not Found .</p>;
+  if (loading)
+    return (
+      <p style={{ padding: "20px", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <Loader2 size={18} className="spin" /> Loading ticket...
+      </p>
+    );
+  if (!ticket) return <p style={{ padding: "20px" }}>Ticket not found.</p>;
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   return (
     <div className="ticket-detail-shell">
       <Link to="/dashboard" className="btn btn-ghost" style={{ marginBottom: "15px" }}>
-        &larr; Back to Dashboard
+        <ArrowLeft size={16} /> Back to Dashboard
       </Link>
       {/* 1. Ticket Header Data */}
       <div className="card" style={{ padding: "20px" }}>
         <h2>{ticket.title}</h2>
-        <p>
-          <strong>Status:</strong> <span className="badge">{ticket.status}</span>{" "}
-          | <strong>Priority:</strong> {ticket.priority}
+        <p className="ticket-meta" style={{ marginBottom: "0.75rem" }}>
+          <span className={`badge status-${ticket.status.toLowerCase()}`}>
+            <span className="badge-dot" /> {ticket.status.replace("_", " ")}
+          </span>
+          <span className={`badge priority-${ticket.priority.toLowerCase()}`}>
+            <span className="badge-dot" /> {ticket.priority}
+          </span>
         </p>
         <p
           style={{
@@ -105,7 +115,9 @@ const TicketDetails = () => {
         {/* 2. Render Multer Attachments */}
         {ticket.attachments && ticket.attachments.length > 0 && (
           <div style={{ marginTop: "15px" }}>
-            <h4>Attachments:</h4>
+            <h4 style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+              <Paperclip size={15} /> Attachments
+            </h4>
             <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
               {ticket.attachments.map((imgUrl, idx) => (
                 <a
@@ -151,10 +163,12 @@ const TicketDetails = () => {
       </div>
       {/* 4. Socket.io Live Chat System */}
       <div style={{ marginTop: "20px" }}>
-        <h3>Discussion Thread</h3>
+        <h3 style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+          <MessageSquare size={18} /> Discussion Thread
+        </h3>
         <div className="discussion-thread card">
           {ticket.comments.length === 0 ? (
-            <p>No comments yet.</p>
+            <p style={{ color: "var(--text-muted)" }}>No comments yet.</p>
           ) : (
             ticket.comments.map((c, i) => (
               <div
@@ -181,7 +195,7 @@ const TicketDetails = () => {
             className="form-control"
           />
           <button type="submit" className="btn btn-info">
-            Send
+            <Send size={16} /> Send
           </button>
         </form>
       </div>

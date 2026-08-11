@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { UserPlus, Eye, EyeOff, Headset } from "lucide-react";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -43,7 +44,10 @@ const Register = () => {
 
   return (
     <div className="auth-shell card">
-      <h2>Register for SupportDesk</h2>
+      <div style={{ display: "flex", justifyContent: "center", marginBottom: "0.5rem" }}>
+        <Headset size={32} color="var(--brand)" />
+      </div>
+      <h2 style={{ textAlign: "center" }}>Register for SupportDesk</h2>
       {error && <p className="form-error">{error}</p>}
 
       <form onSubmit={handleRegister}>
@@ -83,7 +87,7 @@ const Register = () => {
               onClick={() => setShowPassword(!showPassword)}
               className="input-group-btn"
             >
-              {showPassword ? "Hide" : "Show"}
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
         </div>
@@ -100,7 +104,7 @@ const Register = () => {
         </div>
 
         <button type="submit" className="btn btn-success btn-block">
-          Register
+          <UserPlus size={16} /> Register
         </button>
       </form>
 

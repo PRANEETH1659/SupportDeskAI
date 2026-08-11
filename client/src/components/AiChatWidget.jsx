@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import { Sparkles, X, Mic, Send } from "lucide-react";
 import useSpeechRecognition from "../hooks/useSpeechRecognition";
 import useSpeechSynthesis from "../hooks/useSpeechSynthesis";
 
@@ -100,7 +101,7 @@ const AiChatWidget = () => {
   if (!isOpen) {
     return (
       <button className="ai-widget-toggle" onClick={() => setIsOpen(true)}>
-        ✨ Ask AI Support
+        <Sparkles size={17} /> Ask AI Support
       </button>
     );
   }
@@ -110,7 +111,9 @@ const AiChatWidget = () => {
     <div className="ai-widget-panel">
       {/* --- Chat Header --- */}
       <div className="ai-widget-header">
-        <h3 style={{ margin: 0, fontSize: "16px" }}>✨ SupportDesk AI</h3>
+        <div className="ai-widget-title">
+          <Sparkles size={17} /> SupportDesk AI
+        </div>
         <button
           onClick={() => {
             setIsOpen(false);
@@ -118,7 +121,7 @@ const AiChatWidget = () => {
           }}
           className="ai-widget-close"
         >
-          &times;
+          <X size={16} />
         </button>
       </div>
 
@@ -134,7 +137,11 @@ const AiChatWidget = () => {
         {isLoading && (
           <div className="ai-message ai">
             <div className="ai-bubble">
-              <i>Typing...</i>
+              <span className="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
             </div>
           </div>
         )}
@@ -149,7 +156,7 @@ const AiChatWidget = () => {
           className={`ai-mic-btn ${isListening ? "listening" : ""}`}
           title={isListening ? "Stop listening" : "Start speaking"}
         >
-          🎤
+          <Mic size={17} />
         </button>
         <input
           type="text"
@@ -164,7 +171,7 @@ const AiChatWidget = () => {
           disabled={!inputText.trim() || isLoading}
           className="ai-send-btn"
         >
-          ➤
+          <Send size={16} />
         </button>
       </form>
     </div>

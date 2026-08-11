@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { Headset } from "lucide-react";
 
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -22,7 +23,10 @@ function App() {
     <Router>
       <div className="app-container">
         <nav className="navbar">
-          <h2>SupportDesk AI</h2>
+          <div className="navbar-brand">
+            <Headset size={22} />
+            <h2>SupportDesk AI</h2>
+          </div>
         </nav>
 
         {/* AI assistant is a customer-facing feature only */}

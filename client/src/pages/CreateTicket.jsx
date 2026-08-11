@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
+import { Paperclip, Loader2, Send } from "lucide-react";
 
 const CreateTicket = () => {
   const [title, setTitle] = useState("");
@@ -104,7 +105,9 @@ const CreateTicket = () => {
           ></textarea>
         </div>
         <div className="form-group">
-          <label>Attachments (Screenshots - Max 3)</label>
+          <label>
+            <Paperclip size={14} style={{ verticalAlign: "-2px" }} /> Attachments (Screenshots - Max 3)
+          </label>
           {/* File input handling */}
           <input
             type="file"
@@ -119,7 +122,15 @@ const CreateTicket = () => {
           disabled={loading}
           className="btn btn-success btn-block"
         >
-          {loading ? "Submitting..." : "Submit Ticket"}
+          {loading ? (
+            <>
+              <Loader2 size={16} className="spin" /> Submitting...
+            </>
+          ) : (
+            <>
+              <Send size={16} /> Submit Ticket
+            </>
+          )}
         </button>
       </form>
     </div>

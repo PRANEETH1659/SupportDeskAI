@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { LogIn, Eye, EyeOff, Headset } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -37,7 +38,10 @@ const Login = () => {
 
   return (
     <div className="auth-shell card">
-      <h2>Login</h2>
+      <div style={{ display: "flex", justifyContent: "center", marginBottom: "0.5rem" }}>
+        <Headset size={32} color="var(--brand)" />
+      </div>
+      <h2 style={{ textAlign: "center" }}>Login</h2>
 
       {error && <p className="form-error">{error}</p>}
 
@@ -68,13 +72,13 @@ const Login = () => {
               onClick={() => setShowPassword(!showPassword)}
               className="input-group-btn"
             >
-              {showPassword ? "Hide" : "Show"}
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
           </div>
         </div>
 
         <button type="submit" className="btn btn-info btn-block">
-          Login
+          <LogIn size={16} /> Login
         </button>
       </form>
 
