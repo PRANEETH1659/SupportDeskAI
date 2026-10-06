@@ -1,8 +1,10 @@
+const mongoose = require("mongoose");
+
 const Ticket = require("../models/Ticket");
 
 const createTicket = async (req, res) => {
   try {
-    const { title, description, category, priority, status } = req.body;
+    const { title, description, category, priority } = req.body;
 
     if (!title || !description) {
       return res
@@ -41,6 +43,10 @@ const createTicket = async (req, res) => {
       ticket: populatedTicket,
     });
   } catch (error) {
+    if (error.name === "ValidationError") {
+      const firstMsg = Object.values(error.errors)[0].message;
+      return res.status(400).json({ message: firstMsg });
+    }
     res.status(500).json({ message: error.message });
   }
 };
@@ -96,6 +102,10 @@ const getTickets = async (req, res) => {
 // Get single ticket . GET /api/tickets/:id
 const getTicketById = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid ticket ID" });
+    }
+
     const ticket = await Ticket.findById(req.params.id)
       .populate("customer", "name email")
       .populate("assignedAgent", "name email");
@@ -123,6 +133,9 @@ const getTicketById = async (req, res) => {
 
 const updateTicketStatus = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid ticket ID" });
+    }
     const { status, priority, assignedAgent } = req.body;
 
     const ticket = await Ticket.findById(req.params.id);
@@ -147,6 +160,10 @@ const updateTicketStatus = async (req, res) => {
 
     res.json(populatedTicket);
   } catch (error) {
+    if (error.name === "ValidationError") {
+      const firstMsg = Object.values(error.errors)[0].message;
+      return res.status(400).json({ message: firstMsg });
+    }
     res.status(500).json({ message: error.message });
   }
 };
@@ -155,16 +172,19 @@ const updateTicketStatus = async (req, res) => {
 
 const addComment = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid ticket ID" });
+    }
     const { message } = req.body;
 
     if (!message) {
-      return res.status(400).json({ error: "No Message Found " });
+      return res.status(400).json({ message: "No Message Found" });
     }
 
     const ticket = await Ticket.findById(req.params.id);
 
     if (!ticket) {
-      return res.status(404).json({ error: "Ticket Not Found " });
+      return res.status(404).json({ message: "Ticket Not Found" });
     }
 
     const comment = {

@@ -39,6 +39,10 @@ const registerUser = async (req, res) => {
       res.status(400).json({ message: "Invalid user data" });
     }
   } catch (error) {
+    if (error.name === "ValidationError") {
+      const firstMsg = Object.values(error.errors)[0].message;
+      return res.status(400).json({ message: firstMsg });
+    }
     res.status(500).json({ message: error.message });
   }
 };
